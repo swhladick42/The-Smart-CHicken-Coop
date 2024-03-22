@@ -13,6 +13,9 @@
     $.getJSON('https://www.simplecoop.com/sessions.php',{email:'',password:''},function(result){
         console.log(result);
     })
-    
+    $.postJSON('https://www.simplecoop.com/sessions.php',{email:'', password:' '},function(result){
+        result = JSON.parse(result);
+        console.log(result);
+    })
 </script>
 </html>
