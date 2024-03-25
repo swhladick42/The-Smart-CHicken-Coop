@@ -4,8 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Smart Chicken Coop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 </head>
 <body>
+    <div class ="col-12 bg-primary vh-200 d-flex justify-content-center align-items-center">
+        <div class = "col-12 col-md-7 col-lg-5 card" id="divLogin">
+            <div class ="card-header">
+                <h3>Customer Registration Form</h3>
+            </div>
+            <div class = "card-body">
+                <form>
+                    <label for = "txtFname" class = "form-label">First Name</label>
+                    <input id="txtFname" class = "form-control">
+                    <label for="txtLname" class="form-label">Last name</label>
+                    <input id="txtLname" class="form-control">
+                    <label for = "txtEmail" class = "form-label">Email Address</label>
+                    <input id = "txtEmail" class = "form-control">
+                    <label for = "txtPassword" class = "form-label">Password</label>
+                    <input id = "txtPassword" class = "form-control">
+                    <label for ="txtStreet1" class = "form-label">Street Address 1</label>
+                    <input id = "txtStreet1" class = "form-control">
+                    <label for = "txtStreet2" class ="from-label">Street Address 2</label>
+                    <input id ="txtStreet2" class="form-control">
+                    <label for="txtCity" class="form-label">City</label>
+                    <input id="txtCity" class="form-control">
+                    <label for="txtState" class="form-label">State</label>
+                    <input id="txtState" class="form-control">
+                    <label for="txtZip" class="form-label">Zip Code</label>
+                    <input id="txtZip" class="form-control">
+                    
+                    <button class="btn btn-primary mt-3" type="button" id="btn-submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
     
+         $('#btn-submit').on('click',function(){
+            let strFname = $('#txtFname').val();
+            let strLname = $('#txtLname').val();
+            let strEmail = $('#txtEmail').val();
+            let strPassword = $('#txtPassword').val();
+            let strStreet1 = $('#txtStreet1').val();
+            let strStreet2 = $('#txtStreet2').val();
+            let strCity = $('#txtCity').val();
+            let strState = $('#txtState').val();
+            let strZip = $('#txtZip').val();
+            let blnError = false;
+            let strError = '';
+
+            if(strFname == ''){
+                console.log('First Name is empty')
+                blnError = true;
+                strError += "First Name cannot be blank.\n"
+            }
+
+            if(strLname == ''){
+                console.log('Last Name is empty')
+                blnError = true;
+                strError += "Last Name cannot be blank.\n"
+            }
+
+            if(strEmail == ''){
+                console.log('Email is empty')
+                blnError = true;
+                strError += "Email cannot be blank.\n"
+            }
+
+            if(strPassword == ''){
+                console.log('Password is empty')
+                blnError = true;
+                strError += "Password cannot be blank.\n"
+            }
+
+            if(strStreet1 == ''){
+                console.log('Street Address is empty')
+                blnError = true;
+                strError += "Street Address cannot be blank.\n"
+            }
+
+            if(strStreet2 == ''){
+                console.log('Street Address is empty')
+                blnError = true;
+                strError += "Street Address cannot be blank.\n"
+            }
+
+            if(strCity == ''){
+                console.log('City is empty')
+                blnError = true;
+                strError += "City cannot be blank.\n"
+            }
+
+            if(strState == ''){
+                console.log('State is empty')
+                blnError = true;
+                strError += "State cannot be blank.\n"
+            }
+
+            if(strZip == ''){
+                console.log('Zip is empty')
+                blnError = true;
+                strError += "Zip cannot be blank.\n"
+            }
+
+            if(blnError == true){
+                alert(strError);
+            } else{
+                $.post('https://simplecoop.swollenhippo.com/users.php',{Email:strEmail,Password:strPassword,FirstName:strFname,LastName:strLname,CoopID:'84ATR6S9'},function(result){
+                    result=JSON.parse(result);
+                    console.log(result);
+                })
+            }
+        })
+    </script>
 </body>
 </html>
