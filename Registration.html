@@ -45,7 +45,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
     
-         $('#btn-submit').on('click',function(){
+        $('#btn-submit').on('click',function(){
             let strFname = $('#txtFname').val();
             let strLname = $('#txtLname').val();
             let strEmail = $('#txtEmail').val();
@@ -111,22 +111,27 @@
                 blnError = true;
                 strError += "Zip cannot be blank.\n"
             }
-
-            if(blnError == true){
-                alert(strError);
-            } else{
+            let objectParameter = ''
+            if(blnError == false){
                 $.post('https://simplecoop.swollenhippo.com/users.php',{Email:strEmail,Password:strPassword,FirstName:strFname,LastName:strLname,CoopID:'84ATR6S9'},function(result){
                     result=JSON.parse(result);
                     console.log(result);
-                })
-                if(result.Outcome == 'New User Created'){
-                    $.post('https://simplecoop.swollenhippo.com/useraddress.php',{Email:strEmail,Street1:strStreet1,Street2:strStreet2,City:strCity,State:strState,Zip:strZip},function(result1){
-                        result1=JSON.parse(result1);
-                        console.log(result1);
+                    let objectParameter = true;
+                    if(objectParameter == true){
+                        $.post('https://simplecoop.swollenhippo.com/useraddress.php',{Email:strEmail,Street1:strStreet1,Street2:strStreet2,City:strCity,State:strState,ZIP:strZip},function(Address){
+                            Address=JSON.parse(Address);
+                            console.log(Address);
+                        })
+                } else{
+                    swal.fire({
+                        type: 'Error',
+                        html: strErrorMsg
                     })
-                }
+                    }
+                })
             }
         })
+
     </script>
 </body>
 </html>
