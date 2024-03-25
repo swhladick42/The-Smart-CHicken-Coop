@@ -119,18 +119,14 @@
                     result=JSON.parse(result);
                     console.log(result);
                 })
+                if(result.Outcome == 'New User Created'){
+                    $.post('https://simplecoop.swollenhippo.com/useraddress.php',{Email:strEmail,Street1:strStreet1,Street2:strStreet2,City:strCity,State:strState,Zip:strZip},function(result1){
+                        result1=JSON.parse(result1);
+                        console.log(result1);
+                    })
+                }
             }
         })
     </script>
 </body>
-<script>
-    //request 
-    $.getJSON('https://www.simplecoop.com/sessions.php',{email:'',password:''},function(result){
-        console.log(result);
-    })
-    $.postJSON('https://www.simplecoop.com/sessions.php',{email:'', password:' '},function(result){
-        result = JSON.parse(result);
-        console.log(result);
-    })
-</script>
 </html>
