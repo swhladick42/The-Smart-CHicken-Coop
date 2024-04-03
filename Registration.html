@@ -16,18 +16,18 @@
             </div>
             <div class = "card-body">
                 <form>
-                    <label for = "txtFname" class = "form-label">First Name</label>
-                    <input id="txtFname" class = "form-control">
+                    <label for="txtFname" class="form-label">First Name</label>
+                    <input id="txtFname" class="form-control">
                     <label for="txtLname" class="form-label">Last name</label>
                     <input id="txtLname" class="form-control">
-                    <label for = "txtEmail" class = "form-label">Email Address</label>
-                    <input id = "txtEmail" class = "form-control">
-                    <label for = "txtPassword" class = "form-label">Password</label>
-                    <input id = "txtPassword" class = "form-control">
-                    <label for ="txtStreet1" class = "form-label">Street Address 1</label>
-                    <input id = "txtStreet1" class = "form-control">
-                    <label for = "txtStreet2" class ="from-label">Street Address 2</label>
-                    <input id ="txtStreet2" class="form-control">
+                    <label for="txtEmail" class="form-label">Email Address</label>
+                    <input id="txtEmail" class="form-control">
+                    <label for="txtPassword" class="form-label">Password</label>
+                    <input id="txtPassword" class="form-control">
+                    <label for="txtStreet1" class="form-label">Street Address 1</label>
+                    <input id="txtStreet1" class="form-control">
+                    <label for="txtStreet2" class="from-label">Street Address 2</label>
+                    <input id="txtStreet2" class="form-control">
                     <label for="txtCity" class="form-label">City</label>
                     <input id="txtCity" class="form-control">
                     <label for="txtState" class="form-label">State</label>
@@ -44,7 +44,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
-    
+        const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        const regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
+
         $('#btn-submit').on('click',function(){
             let strFname = $('#txtFname').val();
             let strLname = $('#txtLname').val();
@@ -55,6 +57,7 @@
             let strCity = $('#txtCity').val();
             let strState = $('#txtState').val();
             let strZip = $('#txtZip').val();
+            let coopID = '84ATR6S9';
             let blnError = false;
             let strError = '';
 
@@ -74,6 +77,16 @@
                 console.log('Email is empty')
                 blnError = true;
                 strError += "Email cannot be blank.\n"
+            }
+
+            if(strEmail.length < 6){
+                console.log("Email Length must be greater than 6 characters.")
+                blnError = true;
+                strError += "Length must be greater than 6 characters.\n"
+            } else if(!strEmail.includes('@') || !strEmail.includes('.')){
+                console.log("Must be a valid Email.")
+                blnError = true;
+                strError += "Must be a valid Email.\n" 
             }
 
             if(strPassword == ''){
@@ -111,23 +124,27 @@
                 blnError = true;
                 strError += "Zip cannot be blank.\n"
             }
-            let objectParameter = ''
+            let objectParameter = '';
             if(blnError == false){
-                $.post('https://simplecoop.swollenhippo.com/users.php',{Email:strEmail,Password:strPassword,FirstName:strFname,LastName:strLname,CoopID:'84ATR6S9'},function(result){
+                $.post('https://simplecoop.swollenhippo.com/users.php',{Email:strEmail,Password:strPassword,FirstName:strFname,LastName:strLname,CoopID:coopID},function(result){
                     result=JSON.parse(result);
                     console.log(result);
                     let objectParameter = true;
-                    if(objectParameter == true){
+                    if(result.outcome = "New User Created"){
                         $.post('https://simplecoop.swollenhippo.com/useraddress.php',{Email:strEmail,Street1:strStreet1,Street2:strStreet2,City:strCity,State:strState,ZIP:strZip},function(Address){
                             Address=JSON.parse(Address);
                             console.log(Address);
+                            $('#divDashboard').slideToggle(function(){
+                            $('#divLogin').slideToggle();
+                            })
                         })
-                } else{
-                    swal.fire({
-                        type: 'Error',
-                        html: strErrorMsg
-                    })
                     }
+            else{
+                swal.fire({
+                    type: 'Error',
+                    html: strErrorMsg
+                })
+                }
                 })
             }
         })
