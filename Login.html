@@ -1,0 +1,117 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Smart Chicken Coop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body  style="background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%); background-attachment: fixed;">
+    <div id="divLogin" class="justify-content-center align-items-center vh-100" style="display:flex;">
+        <div class="col-md-6 col-lg-4 ">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                    </div>
+                        <div class="mt-1">
+                            <label for="txtLoginEmail" class="text-black form-label">Email</label>
+                            <div class="input-group">
+                                <input id="txtLoginEmail" type="email" class="form-control" placeholder="jdoe@gmail.com" aria-label="Email">
+                            </div>
+                        </div>
+                        <div class="mt-1">
+                            <label for="txtLoginPassword" class="text-black form-label">Password </label>
+                            <div class="">
+                                <input id="txtLoginPassword" type="password" class="form-control" placeholder="Pasword" aria-label="Password">
+                            </div>
+                        </div>
+                        <button id="btnLogin" type="button" class="btn btn-success text-white col-12 mt-2"  aria-label="Login Button">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="divDashboard" style="display: none;">
+        <div class="d-flex justify-content-center">
+            <div class="card bg-dark text-white col-11 mt-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <h3>The Smart Chicken Coop</h3>
+                        <button class="btn btn-danger" type="button" id="btnLogout">Logout</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                        
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>        
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        const regEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        const regPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
+        
+
+        $('#btnLogout').on('click',function(){
+            sessionStorage.removeItem('APIKey');
+            $('#divDashboard').slideToggle(function(){
+                $('#divLogin').slideToggle();
+            })
+        })
+
+
+        $('#btnLogin').on('click',function(){
+            let strErrorMsg = '';
+            let blnError = false;
+
+            let strEmail = $('#txtLoginEmail').val()
+            let strPassword = $('#txtLoginPassword').val()
+
+            if(strEmail.length < 1) {
+                console.log("Email cannot be blank.")
+                blnError = true;
+                strErrorMsg += '<p>Email cannot be blank</p>'
+            }
+
+            if(strPassword.length < 1) {
+                console.log("Passwrod cannot be blank.")
+                blnError = true;
+                strErrorMsg += '<p>Passwrod cannot be blank</p>'
+            }
+
+            if(strEmail.length < 6){
+                console.log("Email Length must be greater than 6 characters.")
+                blnError = true;
+                strError += "Length must be greater than 6 characters.\n"
+            } else if(!strEmail.includes('@') || !strEmail.includes('.')){
+                console.log("Must be a valid Email.")
+                blnError = true;
+                strError += "Must be a valid Email.\n" 
+            }
+
+            if(blnError == false){
+                $.post('https://simplecoop.swollenhippo.com/sessions.php',{Email:strEmail,Password:strPassword},function(result){
+                    result = JSON.parse(result);
+                    console.log(result);
+                    if(result.SessionID){
+                        sessionStorage.setItem('SessionID', result.SessionID)
+                        $('#divLogin').slideToggle(function(){
+                            $('#divDashboard').slideToggle();
+                        })
+                    } else {
+                        swal.fire({
+                            type: 'Error',
+                            html: strErrorMsg
+                        })
+                    }
+                })
+            }
+        })
+    </script>  
+</body>
+</html>
